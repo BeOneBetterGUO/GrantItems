@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    所有物品
+{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{% static 'css/background_color.css' %}">
+{% endblock %}
+
+{% block main %}
+    <div class="row row-cols-4 g-2">
+        {% for item in items %}
+            <div class="col px-1" style="aspect-ratio: 2 / 1; padding: 0;">
+                <div class="card" style="width: 100%; height: 100%;">
+                    <div class="row g-0" style="height: 100%;">
+                        <div class="col-md-6" style="height: 100%;">
+                            <a href="{% url 'items:show_detail' item_id=item.id %}" style="text-decoration: none">
+                                {% if item.image %}
+                                    <img id="" src="/{{ item.image }}" class="rounded-start" alt="..."
+                                         style="height: 100%; width: 100%; object-fit: cover;">
+                                {% else %}
+                                    <img id="" src="{% static 'images/logo.png' %}" class="rounded-start" alt="格物"
+                                         style="height: 100%; width: 100%; object-fit: cover;">
+                                {% endif %}
+                            </a>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card-body">
+                                <h4 class="card-title">{{ item.name }}</h4>
+                                <p class="card-text">数量：{{ item.count }}</p>
+                                <p class="card-text {% if item.status_id == 1 %}bg-lightgreen{% elif item.status_id == 2 %}
+                                bg-lightblue{% elif item.status_id == 3 %}bg-lightpurple{% elif item.status_id == 4 %}bg-lightred{% endif %}">
+                                    状态：{{ item.status }}
+                                </p>
+                                <p class="card-text">分类：{{ item.type }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

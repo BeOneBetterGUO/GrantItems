@@ -1,0 +1,117 @@
+{% extends 'base.html' %}
+
+{% block title %}添加物品{% endblock %}
+
+{% block head %}
+    <!-- 自定义样式 -->
+    <style>
+        .form-control:focus {
+            border-color: #28a745;
+            box-shadow: 0 0 5px rgba(40, 167, 69, 0.5);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+        }
+    </style>
+    <script src='{% static 'js/modify_item.js' %}'></script>
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <div class="card mx-auto mt-5" style="max-width: 800px;">
+            <div class="card-header text-center bg-primary text-white">
+                <h1>修改物品</h1>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'items:item_modify' item_id=item.id %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <!-- 使用网格系统 -->
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label">物品名称</label>
+                            <input type="text" class="form-control" name="name" id="name" value="{{ item.name }}"
+                                   placeholder="{{ item.name }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="category-select" class="form-label">分类</label>
+                            <select name="category" class="form-select" id="category-select">
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if category.id == item.type_id %}
+                                            selected
+                                    {% endif %} >{{ category.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="count" class="form-label">数量</label>
+                            <input type="number" class="form-control" name="count" id="count" value="{{ item.count }}"
+                                   placeholder="{{ item.count }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="price" class="form-label">价格</label>
+                            <input type="number" class="form-control" name="price" id="price" value="{{ item.price }}"
+                                   placeholder="{{ item.price }}">
+                            <small class="form-text text-muted">单位：人民币</small>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="status-select" class="form-label">状态</label>
+                            <select name="status" class="form-select" id="status-select">
+                                {% for status in status %}
+                                    <option value="{{ status.id }}" {% if status.id == item.status_id %}
+                                            selected
+                                    {% endif %} >{{ status.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="overdue" class="form-label">过期时间</label>
+                            <input type="date" class="form-control" name="overdue" id="overdue" value="{{ item.overdue|date:'Y-m-d' }}">
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label for="link" class="form-label">链接</label>
+                            <input type="url" class="form-control" name="link" id="link" placeholder="{{ item.link }}" value="{{ item.link }}">
+                        </div>
+                        <div class="col-md-6">
+                            <label for="image" class="form-label">图片</label>
+                            <input type="file" class="form-control" name="image" id="image">
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <label class="form-label">是否为消耗品</label>
+                            <div class="form-check form-switch">
+                                {% if item.is_consumable %}
+                                <input class="form-check-input" type="checkbox" name="is_consumable" id="is_consumable" checked>
+                                {% else %}
+                                <input class="form-check-input" type="checkbox" name="is_consumable" id="is_consumable">
+                                {% endif %}
+                                <label class="form-check-label" for="is_consumable">是</label>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- 备注 -->
+                    <div class="mb-4">
+                        <label for="description" class="form-label">备注</label>
+                        <textarea class="form-control" name="description" id="description" rows="3"
+                                  >{{ item.description }}</textarea>
+                    </div>
+                    <!-- 提交按钮 -->
+                    <div class="text-end">
+                        <button class="btn btn-success btn-lg" id="submit-btn">
+                            <i class="bi bi-plus-circle"></i> 修改
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

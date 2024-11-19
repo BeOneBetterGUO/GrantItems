@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'bootstrap-5.3.3-dist/css/bootstrap.css' %}">
+    <script src="{% static 'bootstrap-5.3.3-dist/js/bootstrap.bundle.js' %}"></script>
+    <script src="{% static 'jquery/jquery-3.7.1.min.js' %}"></script>
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/hover.css' %}">
+
+    {% block head %}
+    {% endblock %}
+</head>
+
+<body>
+<header class="p-3 text-bg-light border-bottom mb-3">
+    <div class="container">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+            {% if user.is_authenticated %}
+                <a href="{% url 'items:login_index' %}"
+                   class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <img src="{% static 'images/logo.png' %}" alt="格物" width="40" height="40">
+                </a>
+            {% else %}
+                <a href="{% url 'items:index' %}"
+                   class="d-flex align-items-center mb-2 mb-lg-0 text-white text-decoration-none">
+                    <img src="{% static 'images/logo.png' %}" alt="格物" width="40" height="40">
+                </a>
+            {% endif %}
+
+            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'items:login_index' %}" class="nav-link px-2 text-secondary">首页</a></li>
+                {% else %}
+                    <li><a href="{% url 'items:index' %}" class="nav-link px-2 text-secondary">首页</a></li>
+                {% endif %}
+                <li><a href="{% url 'items:item_add' %}" class="nav-link px-2 text-dark">添加物品</a></li>
+                <li><a href="{% url 'items:show_all' %}" class="nav-link px-2 text-dark">所有物品</a></li>
+                <li>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link px-2 text-dark" href="" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            分类
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=1 %}">数码电子</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=2 %}">日常家用</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=3 %}">运动设备</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=4 %}">衣物</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=5 %}">食品药品</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=6 %}">书籍</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=7 %}">工具器材</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=8 %}">办公用品</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=9 %}">个人护理</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_type' type_id=10 %}">装饰品</a></li>
+                        </ul>
+                    </div>
+                </li>
+                <li>
+                    <div class="dropdown">
+                        <a class="dropdown-toggle nav-link px-2 text-dark" href="" role="button"
+                           data-bs-toggle="dropdown" aria-expanded="false">
+                            状态分类
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="{% url 'items:show_status' status_id=1 %}">持有</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_status' status_id=2 %}">预购</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_status' status_id=3 %}">待出</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:show_status' status_id=4 %}">移除</a></li>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+            <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" action="{% url 'items:search' %}"
+                  method="get">
+                <input type="search" class="form-control form-control-dark text-bg-light" placeholder="搜索..."
+                       name="q">
+            </form>
+
+            {% if user.is_authenticated %}
+                <div class="dropdown text-end">
+                    <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                       data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="{% static 'images/logo.png' %}" alt="mdo" width="32" height="32"
+                             class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small" style="">
+                        <li><a class="dropdown-item" href="{% url 'grant_auth:logout' %}">退出登陆</a></li>
+                    </ul>
+                </div>
+            {% else %}
+                <div class="text-end">
+                    <a href="{% url 'grant_auth:login' %}" type="button" class="btn btn-outline-primary me-2">登陆</a>
+                    <a href="{% url 'grant_auth:register' %}" type="button" class="btn btn-primary">注册</a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</header>
+<main class="container bg-white p-3 rounded">
+    {% block main %}{% endblock %}
+</main>
+</body>
+</html>

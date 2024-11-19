@@ -1,0 +1,9 @@
+a:hover {
+    background-color: lightgray; /* Desired background color */
+    color: #ffffff; /* Desired text color */
+    border-radius: 5px; /* Adjust the radius as needed */
+}
+.dropdown-item:hover {
+    background-color: lightgray; /* Desired background color */
+    border-radius: 5px; /* Adjust the radius as needed */
+}

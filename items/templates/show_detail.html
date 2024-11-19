@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    {{ item.name }}
+{% endblock %}
+
+{% block head %}
+    <style>
+        a:hover h1.card-title {
+            color: black;
+        }
+    </style>
+{% endblock %}
+
+{% block main %}
+    <div class="card" style="width: 100%; aspect-ratio: 2/1">
+        <div class="row g-0" style="height: 100%;">
+            <div class="col-md-6" style="height: 100%;">
+                {% if item.image %}
+                    <img id="" src="/{{ item.image }}" class="rounded-start" alt="..."
+                         style="height: 100%; width: 100%; object-fit: cover;">
+                {% else %}
+                    <img id="" src="{% static 'images/logo.png' %}" class="rounded-start" alt="格物"
+                         style="height: 100%; width: 100%; object-fit: cover;">
+                {% endif %}
+            </div>
+            <div class="col-md-6" style="height: 100%;">
+                <div class="card-body" style="height: 100%;">
+                    <a href="{% url 'items:item_modify' item_id=item.id %}" style="text-decoration: none;">
+                        <h1 class="card-title">{{ item.name }}</h1>
+                    </a>
+                    <br>
+                    <p class="card-text">数量：{{ item.count }}</p>
+                    <p class="card-text">状态：{{ item.status }}</p>
+                    <p class="card-text">分类：{{ item.type }}</p>
+                    <p class="card-text">是否为消耗品：
+                        {% if item.is_consumable %}
+                            是
+                        {% else %}
+                            否
+                        {% endif %}
+                    </p>
+                    <p class="card-text">价格：{{ item.price }} 元</p>
+                    {% if item.overdue %}
+                        <p class="card-text">过期时间：{{ item.overdue|date:'Y-m-d' }}</p>
+                    {% else %}
+                        <p class="card-text">过期时间：无</p>
+                    {% endif %}
+                    {% if item.link %}
+                        <p class="card-text">链接：{{ item.link }}</p>
+                    {% else %}
+                        <p class="card-text">链接：无</p>
+                    {% endif %}
+                    {% if item.description %}
+                        <p class="card-text">描述：{{ item.description }}</p>
+                    {% else %}
+                        <p class="card-text">描述：无</p>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
