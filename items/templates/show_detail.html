@@ -4,14 +4,6 @@
     {{ item.name }}
 {% endblock %}
 
-{% block head %}
-    <style>
-        a:hover h1.card-title {
-            color: black;
-        }
-    </style>
-{% endblock %}
-
 {% block main %}
     <div class="card" style="width: 100%; aspect-ratio: 2/1">
         <div class="row g-0" style="height: 100%;">
@@ -26,9 +18,7 @@
             </div>
             <div class="col-md-6" style="height: 100%;">
                 <div class="card-body" style="height: 100%;">
-                    <a href="{% url 'items:item_modify' item_id=item.id %}" style="text-decoration: none;">
-                        <h1 class="card-title">{{ item.name }}</h1>
-                    </a>
+                    <h1 class="card-title">{{ item.name }}</h1>
                     <br>
                     <p class="card-text">数量：{{ item.count }}</p>
                     <p class="card-text">状态：{{ item.status }}</p>
@@ -56,6 +46,14 @@
                     {% else %}
                         <p class="card-text">描述：无</p>
                     {% endif %}
+                    <div class="d-flex justify-content-end" style="position: absolute; bottom: 10px; right: 10px;">
+                        <a href="{% url 'items:item_modify' item_id=item.id %}" class="btn btn-primary"
+                           style="margin: 5px">修改</a>
+                        <a href="{% url 'items:item_remove' item_id=item.id %}" class="btn btn-warning" onclick="return confirm('确认移除该物品吗？');"
+                           style="margin: 5px">移除</a>
+                        <a href="{% url 'items:item_delete' item_id=item.id %}" class="btn btn-danger" onclick="return confirm('确认删除该物品吗？');"
+                           style="margin: 5px">删除</a>
+                    </div>
                 </div>
             </div>
         </div>

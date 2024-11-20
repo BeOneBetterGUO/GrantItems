@@ -59,7 +59,7 @@ def item_add(request):
 
 
 def show_all(request):
-    items = Item.objects.filter(status_id__in=[1,2,3]).order_by('status_id')
+    items = Item.objects.filter(status_id__in=[1, 2, 3]).order_by('status_id')
     context = {
         'items': items
     }
@@ -67,7 +67,7 @@ def show_all(request):
 
 
 def show_type(request, type_id):
-    items = Item.objects.filter(type_id=type_id, status_id__in=[1,2,3]).order_by('status_id')
+    items = Item.objects.filter(type_id=type_id, status_id__in=[1, 2, 3]).order_by('status_id')
     context = {
         'items': items
     }
@@ -130,3 +130,13 @@ def item_modify(request, item_id):
                                                    type_id=type, status_id=status, is_consumable=is_consumable,
                                                    price=price, count=count, overdue=overdue, link=link, owner=owner)
         return JsonResponse({'code': 200, 'msg': '修改成功！', 'item_id': item_id})
+
+
+def item_remove(request, item_id):
+    Item.objects.filter(id=item_id).update(status_id=4)
+    return redirect('items:show_all')
+
+
+def item_delete(request, item_id):
+    Item.objects.filter(id=item_id).delete()
+    return redirect('items:show_all')

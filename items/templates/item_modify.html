@@ -20,15 +20,15 @@
 
 {% block main %}
     <div class="container">
-        <div class="card mx-auto mt-5" style="max-width: 800px;">
+        <div class="card mx-auto" style="max-width: 800px;">
             <div class="card-header text-center bg-primary text-white">
-                <h1>修改物品</h1>
+                <h2>修改物品</h2>
             </div>
             <div class="card-body">
                 <form action="{% url 'items:item_modify' item_id=item.id %}" method="post" enctype="multipart/form-data">
                     {% csrf_token %}
                     <!-- 使用网格系统 -->
-                    <div class="row mb-4">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="name" class="form-label">物品名称</label>
                             <input type="text" class="form-control" name="name" id="name" value="{{ item.name }}"
@@ -45,7 +45,7 @@
                             </select>
                         </div>
                     </div>
-                    <div class="row mb-4">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="count" class="form-label">数量</label>
                             <input type="number" class="form-control" name="count" id="count" value="{{ item.count }}"
@@ -55,10 +55,9 @@
                             <label for="price" class="form-label">价格</label>
                             <input type="number" class="form-control" name="price" id="price" value="{{ item.price }}"
                                    placeholder="{{ item.price }}">
-                            <small class="form-text text-muted">单位：人民币</small>
                         </div>
                     </div>
-                    <div class="row mb-4">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="status-select" class="form-label">状态</label>
                             <select name="status" class="form-select" id="status-select">
@@ -74,7 +73,7 @@
                             <input type="date" class="form-control" name="overdue" id="overdue" value="{{ item.overdue|date:'Y-m-d' }}">
                         </div>
                     </div>
-                    <div class="row mb-4">
+                    <div class="row mb-3">
                         <div class="col-md-6">
                             <label for="link" class="form-label">链接</label>
                             <input type="url" class="form-control" name="link" id="link" placeholder="{{ item.link }}" value="{{ item.link }}">
@@ -84,21 +83,17 @@
                             <input type="file" class="form-control" name="image" id="image">
                         </div>
                     </div>
-                    <div class="row mb-4">
-                        <div class="col-md-6">
-                            <label class="form-label">是否为消耗品</label>
-                            <div class="form-check form-switch">
-                                {% if item.is_consumable %}
-                                <input class="form-check-input" type="checkbox" name="is_consumable" id="is_consumable" checked>
-                                {% else %}
-                                <input class="form-check-input" type="checkbox" name="is_consumable" id="is_consumable">
-                                {% endif %}
-                                <label class="form-check-label" for="is_consumable">是</label>
+                    <div class="row mb-3">
+                            <div class="d-flex align-items-center">
+                                <label class="form-label me-2 mb-0">是否为消耗品</label>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" type="checkbox" name="is_consumable" id="is_consumable">
+                                    <label class="form-check-label" for="is_consumable">是</label>
+                                </div>
                             </div>
-                        </div>
                     </div>
                     <!-- 备注 -->
-                    <div class="mb-4">
+                    <div class="mb-3">
                         <label for="description" class="form-label">备注</label>
                         <textarea class="form-control" name="description" id="description" rows="3"
                                   >{{ item.description }}</textarea>

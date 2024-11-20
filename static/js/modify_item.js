@@ -4,7 +4,6 @@ window.onload = function () {
         event.preventDefault();
 
         let name = $("input[name='name']").val();
-        console.log(name)
         let price = $("input[name='price']").val();
         let type = $("#category-select").val();
         let status = $("#status-select").val();
@@ -39,7 +38,6 @@ window.onload = function () {
             contentType: false, // Prevent jQuery from setting the Content-Type header
             success: function (result) {
                 if (result['code'] == 200) {
-                    alert("修改成功！");
                     window.location.href='/items/show_detail/'+result['item_id'];
                 } else {
                     alert(result['message']);
