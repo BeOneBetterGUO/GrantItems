@@ -17,5 +17,6 @@ urlpatterns = [
     path('items/show_detail/<int:item_id>/', views.show_detail, name='show_detail'),
     path('items/remove/<int:item_id>/', views.item_remove, name='item_remove'),
     path('items/delete/<int:item_id>/', views.item_delete, name='item_delete'),
-
+    path('items/timeline', views.item_timeline, name='item_timeline'),
+    path('items/expired', views.item_expired, name='item_expired'),
 ]

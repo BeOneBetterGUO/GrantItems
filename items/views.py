@@ -1,8 +1,10 @@
 from Tools.scripts.make_ctype import method
+from django.db.models import Q
 from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
+from django.utils import timezone
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
 
 from items.models import ItemCategory, ItemStatus, Item
@@ -58,6 +60,8 @@ def item_add(request):
         return JsonResponse({'code': 200, 'msg': '发布成功'})
 
 
+@require_http_methods(['GET', 'POST'])
+@login_required(login_url=reverse_lazy('grant_auth:login'))
 def show_all(request):
     items = Item.objects.filter(status_id__in=[1, 2, 3]).order_by('status_id')
     context = {
@@ -66,6 +70,8 @@ def show_all(request):
     return render(request, 'show_all.html', context=context)
 
 
+@require_http_methods(['GET', 'POST'])
+@login_required(login_url=reverse_lazy('grant_auth:login'))
 def show_type(request, type_id):
     items = Item.objects.filter(type_id=type_id, status_id__in=[1, 2, 3]).order_by('status_id')
     context = {
@@ -74,6 +80,8 @@ def show_type(request, type_id):
     return render(request, 'show_all.html', context=context)
 
 
+@require_http_methods(['GET', 'POST'])
+@login_required(login_url=reverse_lazy('grant_auth:login'))
 def show_status(request, status_id):
     items = Item.objects.filter(status_id=status_id).order_by('type_id')
     context = {
@@ -140,3 +148,34 @@ def item_remove(request, item_id):
 def item_delete(request, item_id):
     Item.objects.filter(id=item_id).delete()
     return redirect('items:show_all')
+
+
+@require_http_methods(['GET', 'POST'])
+@login_required(login_url=reverse_lazy('grant_auth:login'))
+def item_timeline(request):
+    items = Item.objects.filter(overdue__isnull=False, status_id__in=[1, 3]).order_by('overdue')
+    context = {
+        'items': items,
+        'today': timezone.now().date()
+    }
+    return render(request, 'item_timeline.html', context=context)
+
+
+@require_http_methods(['GET', 'POST'])
+@login_required(login_url=reverse_lazy('grant_auth:login'))
+def item_expired(request):
+    items = Item.objects.filter(overdue__lt=timezone.now().date(), status_id__in=[1, 3]).order_by('overdue')
+    context = {
+        'items': items,
+        'today': timezone.now().date()
+    }
+    return render(request, 'show_all.html', context=context)
+
+
+@require_http_methods(['GET', 'POST'])
+@login_required(login_url=reverse_lazy('grant_auth:login'))
+@require_GET
+def search(request):
+    q = request.GET.get('q')
+    items = Item.objects.filter(Q(name__icontains=q) | Q(description__icontains=q))
+    return render(request, 'show_all.html', context={'items': items})

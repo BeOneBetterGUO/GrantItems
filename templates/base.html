@@ -68,9 +68,11 @@
                             <li><a class="dropdown-item" href="{% url 'items:show_status' status_id=2 %}">预购</a></li>
                             <li><a class="dropdown-item" href="{% url 'items:show_status' status_id=3 %}">待出</a></li>
                             <li><a class="dropdown-item" href="{% url 'items:show_status' status_id=4 %}">移除</a></li>
+                            <li><a class="dropdown-item" href="{% url 'items:item_expired'%}">过期</a></li>
                         </ul>
                     </div>
                 </li>
+                <li><a href="{% url 'items:item_timeline' %}" class="nav-link px-2 text-dark">过期时间线</a></li>
             </ul>
 
             <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" role="search" action="{% url 'items:search' %}"
