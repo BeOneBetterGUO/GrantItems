@@ -6,6 +6,9 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse_lazy
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods, require_POST, require_GET
+from django.db.models import Count
+from datetime import timedelta
+from django.utils import timezone
 
 from items.models import ItemCategory, ItemStatus, Item
 
@@ -15,10 +18,31 @@ def index(request):
     return render(request, 'index.html')
 
 
+@login_required(login_url=reverse_lazy('grant_auth:login'))
 def login_index(request):
-    return render(request, 'login_index.html')
+    today = timezone.now().date()
+    one_month_later = today + timedelta(days=30)
+
+    expired_items = Item.objects.filter(overdue__lt=today, status_id__in=[1, 3]).order_by('overdue')[:5]
+    expiring_soon_items = Item.objects.filter(overdue__range=(today, one_month_later), status_id__in=[1, 3]).order_by(
+        'overdue')[:5]
+    pre_purchase_items = Item.objects.filter(status_id=2).order_by('overdue')[
+                         :5]  # Assuming status_id=2 represents pre-purchase items
+    category_counts = Item.objects.values('type__name').annotate(count=Count('id')).order_by('type__name')
+    status_counts = Item.objects.values('status__name').annotate(count=Count('id')).order_by('status__name')
+
+    context = {
+        'expired_items': expired_items,
+        'expiring_soon_items': expiring_soon_items,
+        'pre_purchase_items': pre_purchase_items,
+        'today': today,
+        'category_counts': list(category_counts),
+        'status_counts': list(status_counts)
+    }
+    return render(request, 'login_index.html', context=context)
 
 
+@login_required(login_url=reverse_lazy('grant_auth:login'))
 def search(request):
     return render(request, 'search.html')
 
