@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load date_diff %}
 
 {% block title %}
     过期时间线
@@ -8,11 +9,17 @@
     <link rel="stylesheet" href="{% static 'css/timeline.css' %}">
     <script src="{% static 'js/timeline.js' %}"></script>
 {% endblock %}
+
 {% block main %}
     <div class="container-second">
         {% for item in items %}
             <p class="{% if item.overdue < today %}overdue{% else %}not-overdue{% endif %}">
-                {{ item.overdue|date:'Y-m-d' }}————{{ item.name }}
+                {{ item.overdue|date:'Y-m-d' }} — {{ item.name }} ——
+                {% if item.overdue < today %}
+                    (已过期 {{ today|date_diff:item.overdue }} 天)
+                {% else %}
+                    (还有 {{ item.overdue|date_diff:today }} 天过期)
+                {% endif %}
             </p>
             {% if not forloop.last %}
                 <div class="vertical-bar"></div>

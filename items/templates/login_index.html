@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load date_diff %}
 
 {% block head %}
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -31,53 +32,53 @@
         </div>
         <div class="col-md-4">
             <div class="container mt-4">
-                <h2>已过期物品</h2>
+                <h2>已过期</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">名称</th>
-                            <th scope="col">种类</th>
                             <th scope="col">状态</th>
-                            <th scope="col">过期时间</th>
+                            <th scope="col">时间</th>
+                            <th scope="col">过期信息</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in expired_items %}
                         <tr>
                             <td><a href="{% url 'items:show_detail' item_id=item.id %}" style="text-decoration: none">{{ item.name }}</td>
-                            <td>{{ item.type.name }}</td>
                             <td>{{ item.status.name }}</td>
                             <td>{{ item.overdue|date:"Y-m-d" }}</td>
+                            <td>已过{{ today|date_diff:item.overdue }}天</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             <div class="container mt-4">
-                <h2>一个月内将会过期的物品</h2>
+                <h2>即将过期</h2>
                 <table class="table table-striped">
                     <thead>
                         <tr>
                             <th scope="col">名称</th>
-                            <th scope="col">种类</th>
                             <th scope="col">状态</th>
-                            <th scope="col">过期时间</th>
+                            <th scope="col">时间</th>
+                            <th scope="col">过期信息</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for item in expiring_soon_items %}
                         <tr>
                             <td><a href="{% url 'items:show_detail' item_id=item.id %}" style="text-decoration: none">{{ item.name }}</td>
-                            <td>{{ item.type.name }}</td>
                             <td>{{ item.status.name }}</td>
                             <td>{{ item.overdue|date:"Y-m-d" }}</td>
+                            <td>还剩{{ item.overdue|date_diff:today }}天</td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
             <div class="container mt-4">
-                <h2>预购物品</h2>
+                <h2>预购</h2>
                 <table class="table table-striped">
                     <thead>
                     <tr>
