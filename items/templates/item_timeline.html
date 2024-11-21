@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    过期时间线
+{% endblock %}
+
+{% block head %}
+    <link rel="stylesheet" href="{% static 'css/timeline.css' %}">
+    <script src="{% static 'js/timeline.js' %}"></script>
+{% endblock %}
+{% block main %}
+    <div class="container-second">
+        {% for item in items %}
+            <p class="{% if item.overdue < today %}overdue{% else %}not-overdue{% endif %}">
+                {{ item.overdue|date:'Y-m-d' }}————{{ item.name }}
+            </p>
+            {% if not forloop.last %}
+                <div class="vertical-bar"></div>
+            {% endif %}
+        {% endfor %}
+    </div>
+{% endblock %}

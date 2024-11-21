@@ -1,0 +1,27 @@
+.container-second {
+    width: 50%;
+    margin: 0 auto;
+}
+
+.overdue {
+    background-color: pink;
+    border-radius: 5px;
+    padding: 5px;
+    padding-left: 10px;
+}
+
+.not-overdue {
+    background-color: lightgreen;
+    border-radius: 5px;
+    padding: 5px;
+    padding-left: 10px;
+}
+
+.vertical-bar {
+    width: 2px;
+    height: 20px;
+    background-color: black;
+    margin-left: 50px;
+    margin-bottom: 10px;
+    transform: translateX(-50%);
+}
