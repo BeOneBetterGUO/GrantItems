@@ -87,7 +87,7 @@ def item_add(request):
 @require_http_methods(['GET', 'POST'])
 @login_required(login_url=reverse_lazy('grant_auth:login'))
 def show_all(request):
-    items = Item.objects.filter(status_id__in=[1, 2, 3]).order_by('status_id')
+    items = Item.objects.filter(status_id__in=[1, 2, 3]).order_by('type_id').order_by('status_id')
     context = {
         'items': items
     }

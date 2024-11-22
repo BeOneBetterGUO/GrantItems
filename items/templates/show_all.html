@@ -27,7 +27,7 @@
                         </div>
                         <div class="col-md-6">
                             <div class="card-body">
-                                <h4 class="card-title">{{ item.name }}</h4>
+                                <h5 class="card-title">{{ item.name }}</h5>
                                 <p class="card-text">数量：{{ item.count }}</p>
                                 <p class="card-text {% if item.status_id == 1 %}bg-lightgreen{% elif item.status_id == 2 %}
                                 bg-lightblue{% elif item.status_id == 3 %}bg-lightpurple{% elif item.status_id == 4 %}bg-lightred{% endif %}">
