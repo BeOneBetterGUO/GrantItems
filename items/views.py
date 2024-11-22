@@ -23,13 +23,17 @@ def login_index(request):
     today = timezone.now().date()
     one_month_later = today + timedelta(days=30)
 
-    expired_items = Item.objects.filter(overdue__lt=today, status_id__in=[1, 3]).order_by('overdue')[:5]
-    expiring_soon_items = Item.objects.filter(overdue__range=(today, one_month_later), status_id__in=[1, 3]).order_by(
+    expired_items = Item.objects.filter(owner=request.user, overdue__lt=today, status_id__in=[1, 3]).order_by(
         'overdue')[:5]
-    pre_purchase_items = Item.objects.filter(status_id=2).order_by('overdue')[
+    expiring_soon_items = Item.objects.filter(owner=request.user, overdue__range=(today, one_month_later),
+                                              status_id__in=[1, 3]).order_by(
+        'overdue')[:5]
+    pre_purchase_items = Item.objects.filter(owner=request.user, status_id=2).order_by('overdue')[
                          :5]  # Assuming status_id=2 represents pre-purchase items
-    category_counts = Item.objects.values('type__name').annotate(count=Count('id')).order_by('type__name')
-    status_counts = Item.objects.values('status__name').annotate(count=Count('id')).order_by('status__name')
+    category_counts = Item.objects.filter(owner=request.user).values('type__name').annotate(count=Count('id')).order_by(
+        'type__name')
+    status_counts = Item.objects.filter(owner=request.user).values('status__name').annotate(count=Count('id')).order_by(
+        'status__name')
 
     context = {
         'expired_items': expired_items,
@@ -40,11 +44,6 @@ def login_index(request):
         'status_counts': list(status_counts)
     }
     return render(request, 'login_index.html', context=context)
-
-
-@login_required(login_url=reverse_lazy('grant_auth:login'))
-def search(request):
-    return render(request, 'search.html')
 
 
 @require_http_methods(['GET', 'POST'])
@@ -87,7 +86,7 @@ def item_add(request):
 @require_http_methods(['GET', 'POST'])
 @login_required(login_url=reverse_lazy('grant_auth:login'))
 def show_all(request):
-    items = Item.objects.filter(status_id__in=[1, 2, 3]).order_by('type_id').order_by('status_id')
+    items = Item.objects.filter(owner=request.user, status_id__in=[1, 2, 3]).order_by('type_id').order_by('status_id')
     context = {
         'items': items
     }
@@ -97,7 +96,7 @@ def show_all(request):
 @require_http_methods(['GET', 'POST'])
 @login_required(login_url=reverse_lazy('grant_auth:login'))
 def show_type(request, type_id):
-    items = Item.objects.filter(type_id=type_id, status_id__in=[1, 2, 3]).order_by('status_id')
+    items = Item.objects.filter(owner=request.user, type_id=type_id, status_id__in=[1, 2, 3]).order_by('status_id')
     context = {
         'items': items
     }
@@ -107,7 +106,7 @@ def show_type(request, type_id):
 @require_http_methods(['GET', 'POST'])
 @login_required(login_url=reverse_lazy('grant_auth:login'))
 def show_status(request, status_id):
-    items = Item.objects.filter(status_id=status_id).order_by('type_id')
+    items = Item.objects.filter(owner=request.user, status_id=status_id).order_by('type_id')
     context = {
         'items': items
     }
@@ -177,7 +176,7 @@ def item_delete(request, item_id):
 @require_http_methods(['GET', 'POST'])
 @login_required(login_url=reverse_lazy('grant_auth:login'))
 def item_timeline(request):
-    items = Item.objects.filter(overdue__isnull=False, status_id__in=[1, 3]).order_by('overdue')
+    items = Item.objects.filter(owner=request.user, overdue__isnull=False, status_id__in=[1, 3]).order_by('overdue')
     context = {
         'items': items,
         'today': timezone.now().date()
@@ -188,7 +187,8 @@ def item_timeline(request):
 @require_http_methods(['GET', 'POST'])
 @login_required(login_url=reverse_lazy('grant_auth:login'))
 def item_expired(request):
-    items = Item.objects.filter(overdue__lt=timezone.now().date(), status_id__in=[1, 3]).order_by('overdue')
+    items = Item.objects.filter(owner=request.user, overdue__lt=timezone.now().date(), status_id__in=[1, 3]).order_by(
+        'overdue')
     context = {
         'items': items,
         'today': timezone.now().date()
@@ -201,5 +201,5 @@ def item_expired(request):
 @require_GET
 def search(request):
     q = request.GET.get('q')
-    items = Item.objects.filter(Q(name__icontains=q) | Q(description__icontains=q))
+    items = Item.objects.filter(Q(name__icontains=q) | Q(description__icontains=q), owner=request.user)
     return render(request, 'show_all.html', context={'items': items})
